@@ -1,0 +1,162 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /*
+     * ADMIN CHECK
+     *
+     * Temporary authorization model:
+     * An admin is identified by the role field
+     * in their users/{uid} Firestore document.
+     *
+     * IMPORTANT:
+     * We will later move this to Firebase Auth
+     * custom claims for production security.
+     */
+    function isAdmin() {
+      return request.auth != null
+        && exists(
+          /databases/$(database)/documents/users/$(request.auth.uid)
+        )
+        && get(
+          /databases/$(database)/documents/users/$(request.auth.uid)
+        ).data.role == "admin";
+    }
+
+
+    /*
+     * USERS
+     */
+    match /users/{userId} {
+
+      // Admins can read user profiles.
+      allow read:
+        if isAdmin();
+
+      // A user can read their own profile.
+      allow read:
+        if request.auth != null
+        && request.auth.uid == userId;
+
+      // A new account can only create itself as a member.
+      allow create:
+        if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.role == "member";
+
+      /*
+       * A normal user can update their own profile,
+       * BUT CANNOT change their role.
+       */
+      allow update:
+        if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.role == resource.data.role;
+
+      // Admins can update user profiles.
+      allow update:
+        if isAdmin();
+
+      // Users can delete their own account profile.
+      allow delete:
+        if request.auth != null
+        && request.auth.uid == userId;
+    }
+
+
+    /*
+     * PROJECTS
+     */
+
+    match /projects/{projectId} {
+
+      // Projects are publicly viewable.
+      allow read:
+        if true;
+
+      // Only admins can create projects.
+      allow create:
+        if isAdmin();
+
+      // Only admins can edit projects.
+      allow update:
+        if isAdmin();
+
+      // Only admins can delete projects.
+      allow delete:
+        if isAdmin();
+    }
+
+
+    /*
+     * COLLABORATION REQUESTS
+     */
+
+    match /collaborationRequests/{requestId} {
+
+      // Logged-in users can create requests for themselves.
+      allow create:
+        if request.auth != null
+        && request.resource.data.userId == request.auth.uid;
+
+      // Users can read their own requests.
+      allow read:
+        if request.auth != null
+        && resource.data.userId == request.auth.uid;
+
+      // Admins can read all requests.
+      allow read:
+        if isAdmin();
+
+      // Admins can update requests.
+      allow update:
+        if isAdmin();
+
+      /*
+       * Users can update their own request,
+       * but cannot change its ownership.
+       */
+      allow update:
+        if request.auth != null
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.userId == resource.data.userId;
+
+      // Admins can delete requests.
+      allow delete:
+        if isAdmin();
+
+      // Users can delete their own requests.
+      allow delete:
+        if request.auth != null
+        && resource.data.userId == request.auth.uid;
+    }
+
+
+    /*
+     * CONTACT MESSAGES
+     */
+
+    match /contactMessages/{messageId} {
+
+      // Anyone can submit a contact message.
+      allow create:
+        if request.resource.data.name is string
+        && request.resource.data.email is string
+        && request.resource.data.message is string
+        && request.resource.data.status == "new";
+
+      // Only admins can read messages.
+      allow read:
+        if isAdmin();
+
+      // Only admins can update messages.
+      allow update:
+        if isAdmin();
+
+      // Only admins can delete messages.
+      allow delete:
+        if isAdmin();
+    }
+  }
+}
