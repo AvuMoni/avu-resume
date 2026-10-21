@@ -1,70 +1,135 @@
-# Getting Started with Create React App
+# Avu Resume — Personal Portfolio & Resume Web Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Avu Resume is a React-based web application developed as a personal portfolio and professional showcase. It provides a central place to present projects, highlight software development skills, share professional information, and enable visitors to make contact or submit collaboration requests.
 
-## Available Scripts
+The application integrates Firebase Authentication and Cloud Firestore to support user authentication, data management, and role-based access rules for administrative functionality. It is deployed using Firebase Hosting.
 
-In the project directory, you can run:
+## Live Application
 
-### `npm start`
+- **Live demo:** https://avu-resume.web.app
+- **GitHub repository:** https://github.com/AvuMoni/avu-resume
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Features
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **Professional Portfolio:** Showcase projects, technical skills, and professional information.
+- **Resume Presentation:** Provide visitors with an accessible overview of professional experience and development capabilities.
+- **Firebase Authentication:** Support account registration, login, and protected application routes.
+- **Admin Dashboard:** Provide administrative interfaces for managing relevant application content and records.
+- **Project Management:** Display portfolio projects and associated information.
+- **Collaboration Requests:** Allow authenticated users to submit and manage their own collaboration requests.
+- **Contact Form:** Allow visitors to submit messages through the application's contact functionality.
+- **Protected Routes:** Restrict access to authenticated and administrative pages.
+- **Database Security:** Apply Firestore Security Rules to control access to application data and prevent ordinary members from changing their own role to administrator.
+- **Responsive Interface:** Build a modern user experience using React and CSS.
+- **Production Hosting:** Deploy the application to Firebase Hosting with single-page application routing.
 
-### `npm test`
+## Technology Stack
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+**Frontend**
+- React 19
+- JavaScript
+- React Router
+- CSS
+- Framer Motion
 
-### `npm run build`
+**Backend Services and Data**
+- Firebase Authentication
+- Cloud Firestore
+- Firebase Hosting
+- Firestore Security Rules
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+**Development Tools**
+- Node.js and npm
+- Git and GitHub
+- Firebase CLI
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Application Architecture
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Avu Resume uses a client-side React architecture integrated with Firebase services.
 
-### `npm run eject`
+1. React renders the portfolio, authentication pages, dashboards, and administrative interfaces.
+2. Firebase Authentication manages user identity and sign-in state.
+3. Cloud Firestore stores application data and applies security rules to database operations.
+4. Protected routes control access to authenticated areas of the interface.
+5. Firestore rules restrict data access according to the authenticated user and their permitted role.
+6. Firebase Hosting serves the production application.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+The project currently uses Firebase client-side services rather than a separate Express backend.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Security
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Security measures implemented in the project include:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- Authentication-aware application routes.
+- Firestore Security Rules for controlling data access.
+- User ownership checks for collaboration requests.
+- Restrictions preventing ordinary members from promoting themselves to administrator through their own user document.
+- Administrative access checks for protected data and operations.
 
-## Learn More
+**Security note:** The current implementation uses Firestore user-role data for administrator authorization. A future enhancement is to move privileged role assignment to a trusted server-side process and use Firebase Authentication custom claims for stronger administrative authorization.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Getting Started
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Prerequisites
 
-### Code Splitting
+- Node.js and npm
+- A Firebase project
+- Firebase Authentication and Cloud Firestore configured
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### 1. Clone the repository
 
-### Analyzing the Bundle Size
+```bash
+git clone https://github.com/AvuMoni/avu-resume.git
+cd avu-resume
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### 2. Install dependencies
 
-### Making a Progressive Web App
+```bash
+npm install
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### 3. Configure Firebase
 
-### Advanced Configuration
+Create a local `.env` file using the environment-variable names expected by `src/firebase.js`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+The project uses Create React App-style environment variables with the `REACT_APP_FIREBASE_` prefix. Configure the Firebase project values required by your existing initialization code.
 
-### Deployment
+Do not commit private environment files or credentials.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### 4. Start the development server
 
-### `npm run build` fails to minify
+```bash
+npm start
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### 5. Create a production build
+
+```bash
+npm run build
+```
+
+### 6. Deploy to Firebase Hosting
+
+After configuring the Firebase CLI and selecting the correct Firebase project:
+
+```bash
+firebase deploy --only hosting
+```
+
+Review your Firebase configuration and deployment target before deploying.
+
+## Project Objectives
+
+Avu Resume was developed to demonstrate practical frontend development, application architecture, authentication, database integration, access-control design, and cloud deployment skills.
+
+The project also serves as a continuously evolving professional portfolio, showcasing the developer's ability to design, build, secure, and deploy a real-world web application.
+
+## Author
+
+**Avuyile Moni**
+
+Full-Stack Developer | React | JavaScript | Firebase
+
+- GitHub: https://github.com/AvuMoni
+- Portfolio: https://avu-resume.web.app
